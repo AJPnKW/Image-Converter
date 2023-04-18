@@ -1,0 +1,94 @@
+<resources>
+    <string name="app_name">AI Image Converter</string>
+    <string name="header">Header</string>
+    <string name="logo">Logo</string>
+    <string name="select_photo">Select Photo</string>
+    <string name="select_photo_and_convert">Select Photo and Convert</string>
+    <string name="go">Go</string>
+    <string name="my_photos">My Photos</string>
+    <string name="convert_photo">Convert Photo</string>
+    <string name="pdf">PDF</string>
+    <string name="png">PNG</string>
+    <string name="jpg">JPG</string>
+    <string name="jpeg">jpeg</string>
+    <string name="webp">WEBP</string>
+    <string name="svg">SVG</string>
+    <string name="gif">GIF</string>
+    <string name="jp2">JP2</string>
+    <string name="select_compression_level">Select Compression Level</string>
+    <string name="convert_image">Convert Image</string>
+    <string name="page_size">Page Size:</string>
+
+    <string name="default_page_size">A4</string>
+    <string name="select_pdf_page_size">Select PDF Page Size : </string>
+    <string name="saved_done">Saved Done</string>
+    <string name="folder">Folder</string>
+    <string name="share">Share</string>
+    <string name="saved_successfully">Saved Successfully</string>
+    <string name="image">Image</string>
+    <string name="convert_images_to_pdf">Convert Images to Pdf</string>
+    <string name="convert_to_pdf">Convert to PDF</string>
+    <string-array name="page_sizes">
+        <item>Free Size</item>
+        <item>A0</item>
+        <item>A1</item>
+        <item>A2</item>
+        <item>A3</item>
+        <item>A4</item>
+        <item>A5</item>
+        <item>A6</item>
+        <item>A7</item>
+        <item>A8</item>
+        <item>A9</item>
+        <item>A10</item>
+
+        <item>B0</item>
+        <item>B1</item>
+        <item>B2</item>
+        <item>B3</item>
+        <item>B4</item>
+        <item>B5</item>
+        <item>B6</item>
+        <item>B7</item>
+        <item>B8</item>
+        <item>B9</item>
+        <item>B10</item>
+
+        <item>LETTER</item>
+        <item>NOTE</item>
+        <item>LEGAL</item>
+        <item>TABLOID</item>
+        <item>EXECUTIVE</item>
+        <item>POSTCARD</item>
+
+        <item>ARCH_E</item>
+        <item>ARCH_D</item>
+        <item>ARCH_C</item>
+        <item>ARCH_B</item>
+        <item>ARCH_A</item>
+
+        <item>FLSA</item>
+        <item>FLSE</item>
+        <item>HALFLETTER</item>
+        <item>_11X17</item>
+
+        <item>ID_1</item>
+        <item>ID_2</item>
+        <item>ID_3</item>
+
+        <item>LEDGER</item>
+        <item>CROWN_QUARTO</item>
+        <item>LARGE_CROWN_QUARTO</item>
+        <item>DEMY_QUARTO</item>
+        <item>ROYAL_QUARTO</item>
+        <item>CROWN_OCTAVO</item>
+        <item>LARGE_CROWN_OCTAVO</item>
+        <item>DEMY_OCTAVO</item>
+        <item>ROYAL_OCTAVO</item>
+        <item>SMALL_PAPERBACK</item>
+        <item>PENGUIN_SMALL_PAPERBACK</item>
+        <item>PENGUIN_LARGE_PAPERBACK</item>
+
+        <!-- Add more page size options here as needed -->
+    </string-array>
+</resources>
