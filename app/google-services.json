@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1010828402794",
+    "project_id": "ai-image-converter",
+    "storage_bucket": "ai-image-converter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1010828402794:android:88c595e159a381fa75aa13",
+        "android_client_info": {
+          "package_name": "image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1010828402794-918e39b9bnmo2v4o7onm5bm2h82k9mdf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaKFAU7GBs0sigh-xcC-cF0hPD4I0DcmE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1010828402794-918e39b9bnmo2v4o7onm5bm2h82k9mdf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -33,13 +34,13 @@
         android:id="@+id/selectPhoto"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:gravity="center"
         android:background="#f1f1f1"
         android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        android:focusable="true">
+        app:layout_constraintTop_toBottomOf="@+id/imageView">
 
         <ImageView
             android:layout_width="50dp"
@@ -78,13 +79,13 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_marginTop="15dp"
-        android:gravity="center"
         android:background="#f1f1f1"
         android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider1"
-        android:focusable="true">
+        app:layout_constraintTop_toBottomOf="@+id/divider1">
 
         <ImageView
             android:layout_width="50dp"
@@ -110,11 +111,50 @@
     </LinearLayout>
 
     <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/myPhotos" />
+        app:layout_constraintTop_toBottomOf="@+id/imagesToPdf" />
 
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/mainAdView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        ads:adSize="LEADERBOARD"
+        ads:adUnitId="ca-app-pub-3516566345027334/1302220566"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/secondAdView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        ads:adSize="LEADERBOARD"
+        ads:adUnitId="ca-app-pub-3516566345027334/2743294744"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainAdView" />
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/thirdAdView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        ads:adSize="FULL_BANNER"
+        ads:adUnitId="ca-app-pub-3516566345027334/8924138836"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/secondAdView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

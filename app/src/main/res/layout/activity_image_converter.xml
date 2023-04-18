@@ -1,177 +1,226 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ImageConverter">
 
-    <ImageView
-        android:id="@+id/close"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_margin="10dp"
-        android:contentDescription="@string/action_cancel"
-        android:src="@drawable/baseline_cancel_24"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="50dp"
-        android:contentDescription="@string/convert_photo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <GridLayout
-        android:id="@+id/gridLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="20dp"
-        android:columnCount="4"
-        android:rowCount="2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3">
-
-        <androidx.constraintlayout.utils.widget.MotionButton
-            android:id="@+id/png"
-            android:layout_width="90dp"
-            android:layout_height="40dp"
-            android:layout_margin="3dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/button_background"
-            android:onClick="getConverterType"
-            android:text="@string/png"
-            android:textColor="@color/white" />
-
-        <androidx.constraintlayout.utils.widget.MotionButton
-            android:id="@+id/jpg"
-            android:layout_width="90dp"
-            android:layout_height="40dp"
-            android:layout_margin="3dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/button_background"
-            android:onClick="getConverterType"
-            android:text="@string/jpg"
-            android:textColor="@color/white" />
-
-        <androidx.constraintlayout.utils.widget.MotionButton
-            android:id="@+id/jpeg"
-            android:layout_width="90dp"
-            android:layout_height="40dp"
-            android:layout_margin="3dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/button_background"
-            android:onClick="getConverterType"
-            android:text="@string/jpeg"
-            android:textColor="@color/white" />
-
-        <androidx.constraintlayout.utils.widget.MotionButton
-            android:id="@+id/webp"
-            android:layout_width="90dp"
-            android:layout_height="40dp"
-            android:layout_margin="3dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/button_background"
-            android:onClick="getConverterType"
-            android:text="@string/webp"
-            android:textColor="@color/white" />
-
-
-    </GridLayout>
-
-    <LinearLayout
-        android:id="@+id/pdfSection"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gridLayout">
-
-        <androidx.constraintlayout.utils.widget.MotionButton
-            android:id="@+id/pdf"
-            android:layout_width="90dp"
-            android:layout_height="40dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/button_background"
-            android:onClick="getConverterType"
-            android:text="@string/pdf"
-            android:textColor="@color/white" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/select_pdf_page_size"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="10dp"
-            android:textSize="16sp" />
-
-        <Spinner
-            android:id="@+id/spinnerPageSize"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:spinnerMode="dialog"
-            android:entries="@array/page_sizes" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:orientation="vertical"
+        android:paddingBottom="30dp"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pdfSection">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="@string/select_compression_level"
-            android:textSize="18sp" />
+            android:layout_marginTop="15dp"
+            android:paddingBottom="30dp">
 
-        <com.google.android.material.slider.RangeSlider
-            android:id="@+id/compressionLevel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:valueFrom="1.0"
-            android:valueTo="100.0"
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:contentDescription="@string/convert_photo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            />
+            <HorizontalScrollView
+                android:id="@+id/gridLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView3">
 
-    </LinearLayout>
+                <GridLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:columnCount="4"
+                    android:rowCount="2">
 
-    <Button
-        android:id="@+id/convertImageBtn"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/button_background"
-        android:enabled="false"
-        android:text="@string/convert_image"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+                    <androidx.constraintlayout.utils.widget.MotionButton
+                        android:id="@+id/png"
+                        android:layout_width="90dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="3dp"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/button_background"
+                        android:onClick="getConverterType"
+                        android:text="@string/png"
+                        android:textColor="@color/white" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
+                    <androidx.constraintlayout.utils.widget.MotionButton
+                        android:id="@+id/jpg"
+                        android:layout_width="90dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="3dp"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/button_background"
+                        android:onClick="getConverterType"
+                        android:text="@string/jpg"
+                        android:textColor="@color/white" />
+
+                    <androidx.constraintlayout.utils.widget.MotionButton
+                        android:id="@+id/jpeg"
+                        android:layout_width="90dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="3dp"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/button_background"
+                        android:onClick="getConverterType"
+                        android:text="@string/jpeg"
+                        android:textColor="@color/white" />
+
+                    <androidx.constraintlayout.utils.widget.MotionButton
+                        android:id="@+id/webp"
+                        android:layout_width="90dp"
+                        android:layout_height="40dp"
+                        android:layout_margin="3dp"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/button_background"
+                        android:onClick="getConverterType"
+                        android:text="@string/webp"
+                        android:textColor="@color/white" />
+
+
+                </GridLayout>
+
+            </HorizontalScrollView>
+
+            <HorizontalScrollView
+                android:id="@+id/pdfSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/gridLayout">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+
+                    <androidx.constraintlayout.utils.widget.MotionButton
+                        android:id="@+id/pdf"
+                        android:layout_width="90dp"
+                        android:layout_height="40dp"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/button_background"
+                        android:onClick="getConverterType"
+                        android:text="@string/pdf"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/select_pdf_page_size"
+                        android:textSize="16sp" />
+
+                    <Spinner
+                        android:id="@+id/spinnerPageSize"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/page_sizes"
+                        android:spinnerMode="dialog" />
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pdfSection">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/select_compression_level"
+                    android:textSize="18sp" />
+
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/compressionLevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:valueFrom="1.0"
+                    android:valueTo="100.0"
+
+                    />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/convertImageBtn"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/button_background"
+                android:enabled="false"
+                android:text="@string/convert_image"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/convertImageBtn" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/converterAdView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="1dp"
+        ads:adSize="LEADERBOARD"
+        ads:adUnitId="ca-app-pub-3516566345027334/3915941461"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/convertImageBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/scrollView3" />
 
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/converterAdViewTwo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="1dp"
+        ads:adSize="FULL_BANNER"
+        ads:adUnitId="ca-app-pub-3516566345027334/4427077350"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/converterAdView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

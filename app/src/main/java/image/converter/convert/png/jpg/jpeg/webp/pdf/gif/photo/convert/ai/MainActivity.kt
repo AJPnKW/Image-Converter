@@ -3,18 +3,24 @@ package image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai
 import android.app.Activity
 import android.content.Intent
 import android.Manifest
+import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.gson.Gson
 import image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,11 +33,17 @@ class MainActivity : AppCompatActivity() {
 
     private val isLowerBuildVersion = Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
 
+    private var mInterstitialAd: InterstitialAd? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        MobileAds.initialize(this) {}
+        setUpAd()
 
         if (!isAllPermissionGranted() && isLowerBuildVersion) {
             requestPermissions()
@@ -40,6 +52,8 @@ class MainActivity : AppCompatActivity() {
             if (isLowerBuildVersion) {
                 if (!isAllPermissionGranted()) {
                     requestPermissions()
+                } else {
+                    pickImage()
                 }
             } else {
                 pickImage()
@@ -51,13 +65,17 @@ class MainActivity : AppCompatActivity() {
             if (isLowerBuildVersion) {
                 if (!isAllPermissionGranted()) {
                     requestPermissions()
+                } else {
+                    pickImages()
                 }
             } else {
                 pickImages()
             }
 
         }
+        backPress()
     }
+
 
     private fun requestPermissions() {
         ActivityCompat.requestPermissions(
@@ -72,6 +90,50 @@ class MainActivity : AppCompatActivity() {
                 baseContext, it
             ) == PackageManager.PERMISSION_GRANTED
         }
+    }
+
+    private fun setUpAd() {
+        try {
+
+            val interAdRequest = AdRequest.Builder().build()
+            InterstitialAd.load(
+                this@MainActivity,
+                "ca-app-pub-3516566345027334/1848466739",
+                interAdRequest,
+                object : InterstitialAdLoadCallback() {
+                    override fun onAdFailedToLoad(adError: LoadAdError) {
+                        mInterstitialAd = null
+                    }
+
+                    override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                        mInterstitialAd = interstitialAd
+                    }
+                })
+
+            val adRequest = AdRequest.Builder().build()
+            val adRequestTwo = AdRequest.Builder().build()
+            val adRequestThree = AdRequest.Builder().build()
+
+            binding.apply {
+                mainAdView.apply {
+                    loadAd(adRequest)
+                    adListener = object : AdListener() {
+                        override fun onAdFailedToLoad(adError: LoadAdError) {
+                            Toast.makeText(
+                                context,
+                                "Turn on Internet connection for better performance! 🙂",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+                }
+                secondAdView.loadAd(adRequestTwo)
+                thirdAdView.loadAd(adRequestThree)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
     }
 
     override fun onRequestPermissionsResult(
@@ -106,38 +168,26 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             when (it.resultCode) {
                 Activity.RESULT_OK -> {
-                    val imageUris = mutableListOf<Uri>()
                     val clipData = it.data?.clipData
-                    val data = it.data?.data
                     if (clipData != null) {
+                        val imageUris = mutableListOf<Uri>()
                         val size = clipData.itemCount
-                        if (size > 15) {
-                            Toast.makeText(this, "Please select up-to 15 images", Toast.LENGTH_LONG)
-                                .show()
-                        } else {
-                            for (i in 0 until size) {
-                                val item = clipData.getItemAt(i)
-                                val uri = item.uri
-                                imageUris.add(uri)
-                            }
+                        for (i in 0 until size) {
+                            val item = clipData.getItemAt(i)
+                            val uri = item.uri
+                            imageUris.add(uri)
                         }
 
-                    } else if (data != null) {
-                        imageUris.add(data)
-                    }
-
-                    if (imageUris.size > 0) {
-                        val imageUrisJson = Gson().toJson(imageUris.map { uri -> uri.toString() })
+                        val imageUrisJson =
+                            Gson().toJson(imageUris.map { uri -> uri.toString() })
                         val i = Intent(this, ImagesTOPdf::class.java)
                         i.putExtra("imageUrisJson", imageUrisJson)
                         startActivity(i)
-
                     } else {
-                        Toast.makeText(this, "Please select images", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, "Please select more than 1 images", Toast.LENGTH_LONG)
+                            .show()
                     }
-                }
-                else -> {
-                    Toast.makeText(this, "Unable to pick images", Toast.LENGTH_LONG).show()
+
                 }
             }
         }
@@ -155,4 +205,37 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
         startForImagesResult.launch(intent)
     }
+
+
+    private fun showExitAd() {
+        mInterstitialAd?.show(this)
+        mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+            override fun onAdDismissedFullScreenContent() {
+                mInterstitialAd = null
+            }
+
+            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                mInterstitialAd = null
+            }
+        }
+    }
+
+    private fun backPress() {
+        val onBackPressCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val alertDialogBuilder = AlertDialog.Builder(this@MainActivity)
+                alertDialogBuilder.setTitle("Exit App")
+                alertDialogBuilder.setMessage("Are you sure you want to exit?")
+                alertDialogBuilder.setPositiveButton("Yes") { _, _ ->
+                    finishAndRemoveTask()
+                }
+                alertDialogBuilder.setNegativeButton("No") { _, _ ->
+                    showExitAd()
+                }
+                alertDialogBuilder.show()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, onBackPressCallback)
+    }
+
 }

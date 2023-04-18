@@ -8,6 +8,8 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.itextpdf.text.Document
@@ -34,6 +36,9 @@ class ImagesTOPdf : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityImagesTopdfBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        MobileAds.initialize(this) {}
+        setUpAd()
 
         val imageUris = getImages()
         if (imageUris != null) {
@@ -63,6 +68,22 @@ class ImagesTOPdf : AppCompatActivity() {
                     // Do nothing
                 }
             }
+    }
+
+    private fun setUpAd() {
+        try {
+
+            val adRequest = AdRequest.Builder().build()
+            val adRequestTwo = AdRequest.Builder().build()
+
+            binding.apply {
+                firstAd.loadAd(adRequest)
+                secondAd.loadAd(adRequestTwo)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
     }
 
     private fun getImages(): List<Uri>? {

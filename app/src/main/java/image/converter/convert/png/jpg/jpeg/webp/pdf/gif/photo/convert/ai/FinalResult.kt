@@ -9,6 +9,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.FileProvider
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai.databinding.ActivityFinalResultBinding
 import java.io.File
 
@@ -19,14 +26,49 @@ class FinalResult : AppCompatActivity() {
     private lateinit var fileUri: Uri
     private lateinit var fileType: String
 
+    private var mInterstitialAd: InterstitialAd? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFinalResultBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        MobileAds.initialize(this) {}
+        setUpAd()
+
         setResultData()
         actions()
+
+    }
+
+    private fun setUpAd() {
+        try {
+
+            val interAdRequest = AdRequest.Builder().build()
+            InterstitialAd.load(
+                this@FinalResult,
+                "ca-app-pub-3516566345027334/1848466739",
+                interAdRequest,
+                object : InterstitialAdLoadCallback() {
+                    override fun onAdFailedToLoad(adError: LoadAdError) {
+                        mInterstitialAd = null
+                    }
+
+                    override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                        mInterstitialAd = interstitialAd
+                    }
+                })
+
+            val adRequest = AdRequest.Builder().build()
+            val adRequestTwo = AdRequest.Builder().build()
+
+            binding.apply {
+                firstAd.loadAd(adRequest)
+                secondAd.loadAd(adRequestTwo)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
     }
 
@@ -42,9 +84,28 @@ class FinalResult : AppCompatActivity() {
                 shareFile()
             }
             close.setOnClickListener() {
-                startActivity(Intent(this@FinalResult, MainActivity::class.java))
+
+                mInterstitialAd?.show(this@FinalResult)
+
+                mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                    override fun onAdDismissedFullScreenContent() {
+                        mInterstitialAd = null
+                    }
+
+                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                        mInterstitialAd = null
+                    }
+                }
+
+                if (mInterstitialAd == null) {
+                    goToMain()
+                }
             }
         }
+    }
+
+    private fun goToMain() {
+        startActivity(Intent(this, MainActivity::class.java))
     }
 
     @SuppressLint("SetTextI18n")

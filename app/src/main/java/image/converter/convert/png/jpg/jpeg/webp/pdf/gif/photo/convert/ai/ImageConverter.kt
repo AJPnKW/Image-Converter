@@ -2,7 +2,6 @@ package image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai
 
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -10,6 +9,8 @@ import android.widget.AdapterView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.utils.widget.MotionButton
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
 import com.itextpdf.text.Document
 import com.itextpdf.text.pdf.PdfWriter
 import image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai.databinding.ActivityImageConverterBinding
@@ -49,6 +50,9 @@ class ImageConverter : AppCompatActivity() {
         binding = ActivityImageConverterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        MobileAds.initialize(this) {}
+        setUpAd()
+
         imageName = converter.getImgName(imageUri)
 
         setImage()
@@ -85,11 +89,21 @@ class ImageConverter : AppCompatActivity() {
                 }
             }
 
+    }
 
-        binding.close.setOnClickListener() {
-            startActivity(Intent(this, MainActivity::class.java))
+    private fun setUpAd() {
+        try {
+
+            val adRequest = AdRequest.Builder().build()
+            val adRequestTwo = AdRequest.Builder().build()
+
+            binding.apply {
+                converterAdView.loadAd(adRequest)
+                converterAdViewTwo.loadAd(adRequestTwo)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-
 
     }
 

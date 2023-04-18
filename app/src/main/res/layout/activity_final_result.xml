@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,33 +13,35 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_margin="10dp"
+        android:layout_marginTop="20dp"
         android:contentDescription="@string/action_cancel"
         android:src="@drawable/baseline_cancel_24"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.985"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         android:layout_margin="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/close">
 
         <ImageView
             android:id="@+id/resultImage"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_marginTop="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:contentDescription="@string/convert_photo"
             android:visibility="gone" />
 
         <com.github.barteksc.pdfviewer.PDFView
             android:id="@+id/resultPdf"
-            android:layout_width="300dp"
-            android:layout_height="400dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:visibility="gone" />
 
     </RelativeLayout>
@@ -50,10 +53,9 @@
         android:layout_margin="10dp"
         android:background="#C5E1A5"
         android:padding="3dp"
-        app:layout_constraintEnd_toEndOf="@+id/close"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
-        tools:ignore="UseCompoundDrawables">
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
         <ImageView
             android:layout_width="30dp"
@@ -73,6 +75,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/resultBottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
@@ -108,4 +111,32 @@
             android:src="@drawable/baseline_share_24" />
 
     </LinearLayout>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/firstAd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        ads:adSize="LEADERBOARD"
+        ads:adUnitId="ca-app-pub-3516566345027334/2738004434"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/resultBottom" />
+
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/secondAd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        ads:adSize="LEADERBOARD"
+        ads:adUnitId="ca-app-pub-3516566345027334/2447232533"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/firstAd" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
