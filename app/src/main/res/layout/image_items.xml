@@ -3,26 +3,58 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    android:layout_gravity="center_horizontal">
 
-    <!-- ImageView for displaying image -->
     <androidx.cardview.widget.CardView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_margin="4dp"
-        android:padding="2dp"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_gravity="center_horizontal"
         app:cardCornerRadius="4dp"
         app:cardElevation="4dp"
         app:cardUseCompatPadding="true">
 
-        <!-- ImageView for displaying image -->
-        <ImageView
-            android:id="@+id/pdfImage"
+        <!-- FrameLayout to hold the image and the edit icon -->
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/convert_images_to_pdf"
-            android:scaleType="centerCrop" />
+            android:padding="2dp"
+            >
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:contentDescription="@string/convert_images_to_pdf"
+                android:foreground="?attr/selectableItemBackground"
+                android:scaleType="centerCrop"
+                android:src="@drawable/logo" />
+
+            <ImageView
+                android:id="@+id/deleteIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|start"
+                android:clickable="true"
+                android:contentDescription="@string/edit_image"
+                android:focusable="true"
+                android:padding="10dp"
+                android:foreground="?attr/selectableItemBackground"
+                android:src="@drawable/baseline_cancel_24" />
+
+            <ImageView
+                android:id="@+id/editIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|end"
+                android:clickable="true"
+                android:padding="10dp"
+                android:contentDescription="@string/edit_image"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:src="@drawable/baseline_crop_24" />
+
+        </FrameLayout>
 
     </androidx.cardview.widget.CardView>
 

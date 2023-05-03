@@ -42,9 +42,11 @@ class ImagesTOPdf : AppCompatActivity() {
 
         val imageUris = getImages()
         if (imageUris != null) {
-            setImages(imageUris)
+            thread.launch {
+                setImages(imageUris)
+            }
 
-            binding.pdfConvertBtn.setOnClickListener() {
+            binding.pdfConvertBtn.setOnClickListener {
                 disableButton()
                 thread.launch {
                     convertToPdf(imageUris)
@@ -103,20 +105,24 @@ class ImagesTOPdf : AppCompatActivity() {
 
 
     private fun setImages(uris: List<Uri>) {
-        val imgLayout = GridLayoutManager(this, 3)
-        val imageAdapter = ImageAdapter()
-
-        imgLayout.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return 1 // Return 1 for each item, assuming each item occupies 1 span
-            }
-        }
-
-        binding.imagesRecyclerView.apply {
-            layoutManager = imgLayout
-            adapter = imageAdapter
-        }
-        imageAdapter.differ.submitList(uris)
+//        try {
+//            val imgLayout = GridLayoutManager(this, 3)
+//            val imageAdapter = ImageAdapter(this)
+//
+//            imgLayout.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+//                override fun getSpanSize(position: Int): Int {
+//                    return 1 // Return 1 for each item, assuming each item occupies 1 span
+//                }
+//            }
+//
+//            binding.imagesRecyclerView.apply {
+//                layoutManager = imgLayout
+//                adapter = imageAdapter
+//            }
+//            imageAdapter.differ.submitList(uris)
+//        } catch (e: Exception) {
+//            Toast.makeText(this, "Unable to load images", Toast.LENGTH_LONG).show()
+//        }
     }
 
     @SuppressLint("SetTextI18n")

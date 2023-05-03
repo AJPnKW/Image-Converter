@@ -15,7 +15,7 @@
     <string name="svg">SVG</string>
     <string name="gif">GIF</string>
     <string name="jp2">JP2</string>
-    <string name="select_compression_level">Select Compression Level</string>
+    <string name="select_compression_level">Compression Level</string>
     <string name="convert_image">Convert Image</string>
     <string name="page_size">Page Size:</string>
 
@@ -91,4 +91,37 @@
 
         <!-- Add more page size options here as needed -->
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="start">Start</string>
+    <string name="select_images_and_continue">Select Images and Continue</string>
+    <string name="ai_image_converter">AI Image Converter</string>
+    <string name="more">more</string>
+    <string name="my_files">My Files</string>
+    <string name="edit_image">Edit Image</string>
+    <string name="add_image">Add Image</string>
+    <string name="images_not_found_please_add_images">Images Not Found! Please Add Images</string>
+    <string name="enter_file_name">Enter File Name</string>
+    <string name="select_format">Select Format</string>
+    <string name="select_page_size">Select Page Size</string>
+    <string name="jpeg_">JPEG</string>
+    <string name="select_size">Select Size</string>
+    <string name="custom_size">Custom Size (pixels)</string>
+    <string name="width">Width</string>
+    <string name="x">X</string>
+    <string name="height">Height</string>
+    <string name="original">Original</string>
+    <string name="_512_x_512">512 x 512</string>
+    <string name="_640_x_480_vga">640 x 480 (VGA)</string>
+    <string name="_800_x_600_svga">800 x 600 (SVGA)</string>
+    <string name="_1024_x_768_xga">1024 x 768 (XGA)</string>
+    <string name="_1280_x_720_720p_hd">1280 x 720 (720p HD)</string>
+    <string name="_1280_x_960_sxga">1280 x 960 (SXGA)</string>
+    <string name="_1280_x_1024_sxga">1280 x 1024 (SXGA+)</string>
+    <string name="_1366_x_768_wxga">1366 x 768 (WXGA)</string>
+    <string name="_1600_x_900_hd">1600 x 900 (HD+)</string>
+    <string name="_1920_x_1080_1080p_full_hd">1920 x 1080 (1080p Full HD)</string>
+    <string name="_2560_x_1440_1440p_qhd">2560 x 1440 (1440p QHD)</string>
+    <string name="_3840_x_2160_2160p_4k_ultra_hd">3840 x 2160 (2160p 4K Ultra HD)</string>
+    <string name="_7680_x_4320_4320p_8k_ultra_hd">7680 x 4320 (4320p 8K Ultra HD)</string>
 </resources>

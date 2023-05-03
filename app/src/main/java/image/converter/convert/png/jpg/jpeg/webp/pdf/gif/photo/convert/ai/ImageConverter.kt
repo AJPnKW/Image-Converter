@@ -57,7 +57,7 @@ class ImageConverter : AppCompatActivity() {
 
         setImage()
 
-        binding.convertImageBtn.setOnClickListener() {
+        binding.convertImageBtn.setOnClickListener {
             disableButton()
             thread.launch {
                 convertImage()

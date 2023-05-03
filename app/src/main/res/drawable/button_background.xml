@@ -6,7 +6,7 @@
             <!-- Define the background color when button is pressed -->
             <solid android:color="@android:color/darker_gray" />
             <!-- Define the corner radius of the button -->
-            <corners android:radius="8dp" />
+            <corners android:radius="50dp" />
         </shape>
     </item>
     <!-- Button default state -->
@@ -15,7 +15,7 @@
             <!-- Define the background color when button is not pressed -->
             <solid android:color="@color/primary" />
             <!-- Define the corner radius of the button -->
-            <corners android:radius="8dp" />
+            <corners android:radius="50dp" />
         </shape>
     </item>
 </selector>

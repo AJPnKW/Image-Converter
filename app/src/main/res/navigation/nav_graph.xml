@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/home2">
+
+    <fragment
+        android:id="@+id/home2"
+        android:name="image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai.fragments.Home"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_home2_to_convertImagesPage"
+            app:destination="@id/convertImagesPage" />
+
+        <argument
+            android:name="uris"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_home2_to_myFilesPage"
+            app:destination="@id/myFilesPage" />
+    </fragment>
+    <fragment
+        android:id="@+id/convertImagesPage"
+        android:name="image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai.fragments.ConvertImagesPage"
+        android:label="fragment_convert_images_page"
+        tools:layout="@layout/fragment_convert_images_page">
+        <action
+            android:id="@+id/action_convertImagesPage_to_home2"
+            app:destination="@id/home2" />
+        <action
+            android:id="@+id/action_convertImagesPage_to_finalResultPage"
+            app:destination="@id/finalResultPage" />
+    </fragment>
+    <fragment
+        android:id="@+id/finalResultPage"
+        android:name="image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai.fragments.FinalResultPage"
+        android:label="fragment_final_result_page"
+        tools:layout="@layout/fragment_final_result_page">
+        <action
+            android:id="@+id/action_finalResultPage_to_convertImagesPage"
+            app:destination="@id/convertImagesPage" />
+        <action
+            android:id="@+id/action_finalResultPage_to_home2"
+            app:destination="@id/home2" />
+        <action
+            android:id="@+id/action_finalResultPage_to_myFilesPage"
+            app:destination="@id/myFilesPage" />
+    </fragment>
+    <fragment
+        android:id="@+id/myFilesPage"
+        android:name="image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai.fragments.MyFilesPage"
+        android:label="fragment_my_files_page"
+        tools:layout="@layout/fragment_my_files_page">
+        <action
+            android:id="@+id/action_myFilesPage_to_home2"
+            app:destination="@id/home2" />
+    </fragment>
+</navigation>

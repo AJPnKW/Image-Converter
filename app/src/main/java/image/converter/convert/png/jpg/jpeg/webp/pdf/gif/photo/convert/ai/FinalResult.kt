@@ -38,12 +38,10 @@ class FinalResult : AppCompatActivity() {
 
         setResultData()
         actions()
-
     }
 
     private fun setUpAd() {
         try {
-
             val interAdRequest = AdRequest.Builder().build()
             InterstitialAd.load(
                 this@FinalResult,
@@ -58,6 +56,7 @@ class FinalResult : AppCompatActivity() {
                         mInterstitialAd = interstitialAd
                     }
                 })
+
 
             val adRequest = AdRequest.Builder().build()
             val adRequestTwo = AdRequest.Builder().build()
@@ -74,19 +73,17 @@ class FinalResult : AppCompatActivity() {
 
     private fun actions() {
         binding.apply {
-            image.setOnClickListener() {
+            image.setOnClickListener {
                 openUri(fileUri, fileType)
             }
-            pdf.setOnClickListener() {
+            pdf.setOnClickListener {
                 openUri(fileUri, fileType)
             }
-            share.setOnClickListener() {
+            share.setOnClickListener {
                 shareFile()
             }
-            close.setOnClickListener() {
-
+            close.setOnClickListener {
                 mInterstitialAd?.show(this@FinalResult)
-
                 mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
                     override fun onAdDismissedFullScreenContent() {
                         mInterstitialAd = null
@@ -96,7 +93,6 @@ class FinalResult : AppCompatActivity() {
                         mInterstitialAd = null
                     }
                 }
-
                 if (mInterstitialAd == null) {
                     goToMain()
                 }
@@ -218,6 +214,4 @@ class FinalResult : AppCompatActivity() {
             e.printStackTrace()
         }
     }
-
-
 }

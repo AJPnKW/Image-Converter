@@ -1,0 +1,153 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_20sdp"
+        tools:ignore="UselessParent">
+
+        <RadioGroup
+            android:id="@+id/imgSizeRadio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="1dp">
+
+
+            <RadioButton
+                android:id="@+id/original"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/original" />
+
+            <RadioButton
+                android:id="@+id/playSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_512_x_512" />
+
+            <RadioButton
+                android:id="@+id/vga"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_640_x_480_vga" />
+
+            <RadioButton
+                android:id="@+id/svga"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_800_x_600_svga" />
+
+            <RadioButton
+                android:id="@+id/xga"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_1024_x_768_xga" />
+
+            <RadioButton
+                android:id="@+id/hd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_1280_x_720_720p_hd" />
+
+            <RadioButton
+                android:id="@+id/sxga"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_1280_x_960_sxga" />
+
+            <RadioButton
+                android:id="@+id/sxga2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_1280_x_1024_sxga" />
+
+            <RadioButton
+                android:id="@+id/wxga"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_1366_x_768_wxga" />
+
+            <RadioButton
+                android:id="@+id/hd2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_1600_x_900_hd" />
+
+            <RadioButton
+                android:id="@+id/fullHd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_1920_x_1080_1080p_full_hd" />
+
+            <RadioButton
+                android:id="@+id/qhd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_2560_x_1440_1440p_qhd" />
+
+            <RadioButton
+                android:id="@+id/ultraHd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_3840_x_2160_2160p_4k_ultra_hd" />
+
+            <RadioButton
+                android:id="@+id/ultra_hd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_7680_x_4320_4320p_8k_ultra_hd" />
+
+        </RadioGroup>
+    </ScrollView>
+
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:layout_marginTop="@dimen/_10sdp"-->
+<!--        android:text="@string/custom_size"-->
+<!--        android:textSize="@dimen/_18sdp" />-->
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:layout_marginTop="@dimen/_5sdp"-->
+<!--        android:orientation="horizontal">-->
+
+<!--        <EditText-->
+<!--            android:layout_width="@dimen/_120sdp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:autofillHints="name"-->
+<!--            android:background="@drawable/input_background"-->
+<!--            android:hint="@string/width"-->
+<!--            android:inputType="number"-->
+<!--            android:padding="10dp" />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="@dimen/_5sdp"-->
+<!--            android:layout_marginEnd="@dimen/_5sdp"-->
+<!--            android:text="@string/x"-->
+<!--            android:textSize="@dimen/_20sdp" />-->
+
+<!--        <EditText-->
+<!--            android:layout_width="@dimen/_120sdp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:autofillHints="name"-->
+<!--            android:background="@drawable/input_background"-->
+<!--            android:hint="@string/height"-->
+<!--            android:inputType="number"-->
+<!--            android:padding="10dp" />-->
+
+<!--    </LinearLayout>-->
+
+</LinearLayout>

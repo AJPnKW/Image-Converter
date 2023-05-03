@@ -16,7 +16,6 @@ import com.itextpdf.text.Rectangle
 import image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai.FinalResult
 import java.io.File
 import java.io.IOException
-import java.io.InputStream
 import kotlin.math.pow
 
 class ConverterService(private val context: Context) {
@@ -118,22 +117,75 @@ class ConverterService(private val context: Context) {
             mediaDir else context.filesDir
     }
 
+    private fun getPageSize(name: String): Rectangle {
+        when (name) {
+            "LETTER" -> return PageSize.LETTER
+            "NOTE" -> return PageSize.NOTE
+            "LEGAL" -> return PageSize.LEGAL
+            "TABLOID" -> return PageSize.TABLOID
+            "EXECUTIVE" -> return PageSize.EXECUTIVE
+            "POSTCARD" -> return PageSize.POSTCARD
+            "A0" -> return PageSize.A0
+            "A1" -> return PageSize.A1
+            "A2" -> return PageSize.A2
+            "A3" -> return PageSize.A3
+            "A4" -> return PageSize.A4
+            "A5" -> return PageSize.A5
+            "A6" -> return PageSize.A6
+            "A7" -> return PageSize.A7
+            "A8" -> return PageSize.A8
+            "A9" -> return PageSize.A9
+            "A10" -> return PageSize.A10
+            "B0" -> return PageSize.B0
+            "B1" -> return PageSize.B1
+            "B2" -> return PageSize.B2
+            "B3" -> return PageSize.B3
+            "B4" -> return PageSize.B4
+            "B5" -> return PageSize.B5
+            "B6" -> return PageSize.B6
+            "B7" -> return PageSize.B7
+            "B8" -> return PageSize.B8
+            "B9" -> return PageSize.B9
+            "B10" -> return PageSize.B10
+            "ARCH_E" -> return PageSize.ARCH_E
+            "ARCH_D" -> return PageSize.ARCH_D
+            "ARCH_C" -> return PageSize.ARCH_C
+            "ARCH_B" -> return PageSize.ARCH_B
+            "ARCH_A" -> return PageSize.ARCH_A
+            "FLSA" -> return PageSize.FLSA
+            "FLSE" -> return PageSize.FLSE
+            "HALFLETTER" -> return PageSize.HALFLETTER
+            "_11X17" -> return PageSize._11X17
+            "ID_1" -> return PageSize.ID_1
+            "ID_2" -> return PageSize.ID_2
+            "ID_3" -> return PageSize.ID_3
+            "LEDGER" -> return PageSize.LEDGER
+            "CROWN_QUARTO" -> return PageSize.CROWN_QUARTO
+            "LARGE_CROWN_QUARTO" -> return PageSize.LARGE_CROWN_QUARTO
+            "DEMY_QUARTO" -> return PageSize.DEMY_QUARTO
+            "ROYAL_QUARTO" -> return PageSize.ROYAL_QUARTO
+            "CROWN_OCTAVO" -> return PageSize.CROWN_OCTAVO
+            "LARGE_CROWN_OCTAVO" -> return PageSize.LARGE_CROWN_OCTAVO
+            "DEMY_OCTAVO" -> return PageSize.DEMY_OCTAVO
+            "ROYAL_OCTAVO" -> return PageSize.ROYAL_OCTAVO
+            "SMALL_PAPERBACK" -> return PageSize.SMALL_PAPERBACK
+            "PENGUIN_SMALL_PAPERBACK" -> return PageSize.PENGUIN_SMALL_PAPERBACK
+            "PENGUIN_LARGE_PAPERBACK" -> return PageSize.PENGUIN_LARGE_PAPERBACK
+            else -> return PageSize.A4
+        }
+    }
+
     fun convertImgToPdf(document: Document, imageUri: Uri, pdfPageSize: String, isSingle: Boolean) {
 
-        var inputStream: InputStream? = null
-
-        val image: Image = if (isSingle) {
-            Image.getInstance(imageUri.toString())
-        } else {
-            inputStream = context.contentResolver.openInputStream(imageUri)
-            val imageBytes = inputStream?.readBytes()
-            Image.getInstance(imageBytes)
-        }
+        val inputStream = context.contentResolver.openInputStream(imageUri)
+        val imageBytes = inputStream?.readBytes()
+        val image = Image.getInstance(imageBytes)
 
         if (pdfPageSize == "Free Size") {
             document.pageSize = Rectangle(image.scaledWidth, image.scaledHeight)
         } else {
-            document.pageSize = PageSize.getRectangle(pdfPageSize)
+            document.pageSize = getPageSize(pdfPageSize)
+
         }
         val rotationAngle = image.rotation
         image.rotation = rotationAngle
