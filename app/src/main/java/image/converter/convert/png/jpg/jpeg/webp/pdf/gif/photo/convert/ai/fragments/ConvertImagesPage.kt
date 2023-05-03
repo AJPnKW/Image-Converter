@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.GridLayoutManager
@@ -92,53 +93,27 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
         convertImage()
     }
 
+
     @SuppressLint("SetTextI18n")
     private fun headerAction() {
-        urisLiveData.observe(viewLifecycleOwner) {
-            navText =
-                if (listSize == 0) "Select Images ->" else if (listSize > 1) "Convert Images" else "Convert Image"
-            binding.apply {
-                header.apply {
-                    headerText.text = navText
-                    headerIcon.visibility = View.GONE
-                    deleteAllImages.apply {
-                        visibility = if (listSize != 0) View.VISIBLE else View.GONE
-                        setOnClickListener {
-                            deleteImages()
-                        }
-                    }
-                }
-
-                if (listSize == 0) {
-                    updateUIVisibility(false, true, true)
-                } else {
-                    updateUIVisibility(true, false, false)
-                }
-
+        urisLiveData.observe(viewLifecycleOwner) { uris ->
+            val liveListSize = uris?.size ?: listSize
+            navText = when {
+                liveListSize == 0 -> "Select Images ->"
+                liveListSize > 1 -> "Convert Images"
+                else -> "Convert Image"
             }
+            binding.header.apply {
+                headerText.text = navText
+                headerIcon.visibility = View.GONE
+                deleteAllImages.apply {
+                    visibility = if (liveListSize != 0) View.VISIBLE else View.GONE
+                    setOnClickListener { deleteImages() }
+                }
+            }
+            updateUIVisibility(liveListSize != 0, liveListSize == 0, liveListSize == 0)
         }
-
-        binding.enterFileName.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {}
-
-            override fun beforeTextChanged(
-                s: CharSequence,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {
-            }
-
-            override fun onTextChanged(
-                s: CharSequence,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
-                fileName = s.toString()
-            }
-        })
-
+        binding.enterFileName.doAfterTextChanged { fileName = it.toString() }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -166,11 +141,9 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
         imageAdapter.notifyDataSetChanged()
     }
 
-
     @SuppressLint("InflateParams", "SetTextI18n")
     private fun selectFormatAction() {
         val popupView = LayoutInflater.from(requireContext()).inflate(R.layout.format_dialog, null)
-
         val popupWindow = PopupWindow(
             popupView,
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -187,87 +160,76 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
             true
         )
 
-        binding.apply {
+        with(binding) {
             selectFormat.setOnClickListener {
                 popupWindow.showAsDropDown(selectFormat, 0, 0)
-                val popupRadioGroup = popupView.findViewById<RadioGroup>(R.id.popupRadioGroup)
-                popupRadioGroup.setOnCheckedChangeListener { _, checkedId ->
-                    val selectedRadioButton = popupView.findViewById<RadioButton>(checkedId)
-                    if (selectedRadioButton != null) {
-                        val value = selectedRadioButton.text.toString()
-                        selectFormat.text = value
-                        format = value
 
-                        compressionLayout.visibility = View.VISIBLE
-                        compressionLevel.values = listOf(1.0f)
+                popupView.findViewById<RadioGroup>(R.id.popupRadioGroup)
+                    .setOnCheckedChangeListener { _, checkedId ->
+                        val selectedRadioButton = popupView.findViewById<RadioButton>(checkedId)
+                        if (selectedRadioButton != null) {
+                            format = selectedRadioButton.text.toString()
+                            selectFormat.text = format
 
-                        convertImageBtn.isEnabled = true
+                            compressionLayout.visibility = View.VISIBLE
+                            compressionLevel.values = listOf(1.0f)
+                            convertImageBtn.isEnabled = true
 
-                        if (value == "PDF") {
-                            pdfPageSize.visibility = View.VISIBLE
-                            selectSize.visibility = View.GONE
-                        } else {
-                            pdfPageSize.visibility = View.GONE
-                            selectSize.visibility = View.VISIBLE
+                            pdfPageSize.visibility =
+                                if (format == "PDF") View.VISIBLE else View.GONE
+                            selectSize.visibility = if (format == "PDF") View.GONE else View.VISIBLE
                         }
-
+                        popupWindow.dismiss()
                     }
-                    popupWindow.dismiss()
-                }
-
-
             }
 
-            pdfPageSize.onItemSelectedListener =
-                object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(
-                        parent: AdapterView<*>?,
-                        view: View?,
-                        position: Int,
-                        id: Long
-                    ) {
-                        pageSize = pdfPageSize.selectedItem.toString()
-                    }
-
-                    override fun onNothingSelected(parent: AdapterView<*>?) {
-                        // Do nothing
-                    }
+            pdfPageSize.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    pageSize = pdfPageSize.selectedItem.toString()
                 }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
 
             selectSize.setOnClickListener {
                 imgSizePopupWindow.showAsDropDown(selectSize, 0, 0)
-                val imgSizePopupRadioGroup =
-                    imgSizePopup.findViewById<RadioGroup>(R.id.imgSizeRadio)
-                imgSizePopupRadioGroup.setOnCheckedChangeListener { _, checkedId ->
-                    val selectedImgRadioButton = imgSizePopup.findViewById<RadioButton>(checkedId)
-                    if (selectedImgRadioButton != null) {
-                        val value = selectedImgRadioButton.text.toString()
-                        if (value != "Original") {
-                            val dimens = value.split(" ").map { it.trim() }
-                            pixWidth = dimens[0].toInt()
-                            pixHeight = dimens[2].toInt()
-                            selectSize.text = "$pixWidth x $pixHeight"
-                        } else {
-                            selectSize.text = value
-                            pixWidth = null
-                            pixHeight = null
-                        }
-                    }
-                    imgSizePopupWindow.dismiss()
-                }
 
+                imgSizePopup.findViewById<RadioGroup>(R.id.imgSizeRadio)
+                    .setOnCheckedChangeListener { _, checkedId ->
+                        val selectedImgRadioButton =
+                            imgSizePopup.findViewById<RadioButton>(checkedId)
+                        if (selectedImgRadioButton != null) {
+                            val value = selectedImgRadioButton.text.toString()
+                            if (value != "Original") {
+                                val arrValue = value.split(" ")
+                                pixWidth = arrValue[0].toInt()
+                                pixHeight = arrValue[2].toInt()
+                                selectSize.text = "$pixWidth x $pixHeight"
+                            } else {
+                                selectSize.text = value
+                                pixWidth = null
+                                pixHeight = null
+                            }
+                        }
+                        imgSizePopupWindow.dismiss()
+                    }
             }
         }
-
     }
+
 
     @SuppressLint("SetTextI18n")
     private fun changeCompressionLevel() {
-        binding.apply {
-            compressionLevel.apply {
-                setLabelFormatter { "" }
-                addOnChangeListener { _, value, _ ->
-                    val intValue = value.toInt()
+        binding.compressionLevel.apply {
+            setLabelFormatter { "" }
+            addOnChangeListener { _, value, _ ->
+                val intValue = value.toInt()
+                binding.apply {
                     quality = 101 - intValue
                     if (intValue >= 10) {
                         pdfCompression = converter.changeQuality(intValue)
@@ -277,6 +239,7 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
             }
         }
     }
+
 
     private fun pickNewImages() {
         val maxItem =
@@ -372,7 +335,7 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
 
         imgLayout.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return 1 // Return 1 for each item, assuming each item occupies 1 span
+                return 1
             }
         }
 
@@ -395,13 +358,10 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
     private fun convertImage() {
         binding.convertImageBtn.apply {
             setOnClickListener {
-                if (format == "PDF") {
-                    thread.launch {
-                        convertToPdf()
-                    }
-                } else {
-                    thread.launch {
-                        urisLiveData.value?.forEachIndexed { index, uri ->
+                thread.launch {
+                    when (format) {
+                        "PDF" -> convertToPdf()
+                        else -> urisLiveData.value?.forEachIndexed { index, uri ->
                             convertImageToFormat(uri, index)
                         }
                     }
@@ -420,85 +380,93 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
 
 
     private fun convertImageToFormat(imageUri: Uri, index: Int) {
-        if (format != null) {
-            val newImageUri: Uri?
-            val imageName =
-                if (fileName != null && fileName!!.trim().isNotEmpty() && fileName!!.trim()
-                        .isNotBlank()
-                ) "${fileName}_$index" else "ai-converted-image${index}-${System.currentTimeMillis()}"
-            val path = converter.getOutputPath(imageName, format!!.lowercase())
-            val outputStream = FileOutputStream(path)
-
-            val bitmap = converter.getBitmapFromUri(imageUri)
-
-            val scaledBitmap =
-                if (pixHeight != null && pixWidth != null) Bitmap.createScaledBitmap(
-                    bitmap!!,
-                    pixWidth!!, pixHeight!!, false
-                ) else bitmap
-
-            val rotatedBitmap = converter.rotateBitmapIfRequired(scaledBitmap!!, imageUri)
-            rotatedBitmap?.compress(
-                converter.getBitmapFormat(format!!.lowercase()),
-                quality,
-                outputStream
-            )
-
-
-            outputStream.flush()
-            outputStream.close()
-
-            newImageUri = if (format == "JPG") {
-                val outputFile = File(path)
-                val newOutputPath = path.replace(".jpeg", ".jpg")
-                outputFile.renameTo(File(newOutputPath))
-                Uri.fromFile(File(newOutputPath))
-            } else {
-                Uri.fromFile(File(path))
+        try {
+            format?.let { format ->
+                val newImageUri: Uri?
+                val imageName = fileName?.takeIf { it.isNotBlank() }?.let { "${it}_$index" }
+                    ?: "ai-converted-image-$index-${System.currentTimeMillis()}"
+                val path = converter.getOutputPath(imageName, format.lowercase())
+                val outputStream = FileOutputStream(path)
+                val bitmap = converter.getBitmapFromUri(imageUri)
+                val scaledBitmap = pixHeight?.let { height ->
+                    pixWidth?.let { width ->
+                        Bitmap.createScaledBitmap(bitmap!!, width, height, false)
+                    }
+                } ?: bitmap
+                val rotatedBitmap = converter.rotateBitmapIfRequired(scaledBitmap!!, imageUri)
+                rotatedBitmap?.compress(
+                    converter.getBitmapFormat(format.lowercase()),
+                    quality,
+                    outputStream
+                )
+                outputStream.flush()
+                outputStream.close()
+                newImageUri = if (format == "JPG") {
+                    val outputFile = File(path)
+                    val newOutputPath = path.replace(".jpeg", ".jpg")
+                    outputFile.renameTo(File(newOutputPath))
+                    Uri.fromFile(File(newOutputPath))
+                } else {
+                    Uri.fromFile(File(path))
+                }
+                newImageUri?.let {
+                    if (index + 1 == urisLiveData.value?.size) {
+                        showSuccessMsg()
+                    } else {
+                        showProgress(index)
+                    }
+                }
             }
-
-            if (newImageUri != null && index + 1 == urisLiveData.value?.size) {
-                showSuccessMsg()
-            } else {
-                showProgress(index)
+        } catch (e: Exception) {
+            activity?.runOnUiThread {
+                Toast.makeText(
+                    requireContext(),
+                    "Error while converting image to $format",
+                    Toast.LENGTH_LONG
+                ).show()
             }
-
         }
     }
 
+
     private fun convertToPdf() {
-        val imageUris = urisLiveData.value!!
+        try {
+            val imageUris = urisLiveData.value!!
+            val imgName = fileName?.takeIf { it.isNotBlank() && it.isNotEmpty() }
+                ?: "ai-converted-image-${System.currentTimeMillis()}"
 
-        val imgName =
-            if (fileName != null && fileName!!.trim().isNotEmpty() && fileName!!.trim()
-                    .isNotBlank()
-            ) fileName!! else "ai-converted-image-${System.currentTimeMillis()}"
+            val path = converter.getOutputPath(imgName, "pdf")
 
-        val path = converter.getOutputPath(imgName, "pdf")
-        val outputStream = FileOutputStream(path)
-        val document = Document()
-        val pdfWriter = PdfWriter.getInstance(document, outputStream)
-        pdfWriter.compressionLevel = pdfCompression
-        document.open()
+            val outputStream = FileOutputStream(path)
+            val document = Document()
+            val pdfWriter = PdfWriter.getInstance(document, outputStream).apply {
+                compressionLevel = pdfCompression
+            }
+            document.open()
 
-        val isSingle = imageUris.size < 2
-        for ((index, imageUri) in imageUris.withIndex()) {
-            converter.convertImgToPdf(document, imageUri, pageSize, isSingle)
-            showProgress(index)
+            val isSingle = imageUris.size < 2
+            imageUris.forEachIndexed { index, imageUri ->
+                converter.convertImgToPdf(document, imageUri, pageSize, isSingle)
+                showProgress(index)
+            }
+
+            document.close()
+            pdfWriter.close()
+            outputStream.close()
+
+            val pdfUri = Uri.fromFile(File(path))
+            if (pdfUri != null) {
+                showSuccessMsg()
+            }
+        } catch (e: Exception) {
+            activity?.runOnUiThread {
+                Toast.makeText(
+                    requireContext(),
+                    "Error while converting image to pdf",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
-
-        document.close()
-        pdfWriter.close()
-
-        outputStream.flush()
-        outputStream.close()
-
-        val pdfUri = Uri.fromFile(File(path))
-
-        if (pdfUri != null) {
-            showSuccessMsg()
-        }
-
     }
 
     @SuppressLint("SetTextI18n")
