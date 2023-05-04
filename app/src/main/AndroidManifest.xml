@@ -40,15 +40,6 @@
             android:value="ca-app-pub-3516566345027334~2566652034" />
 
         <activity
-            android:name=".ImagesTOPdf"
-            android:exported="false" />
-        <activity
-            android:name=".FinalResult"
-            android:exported="false" />
-        <activity
-            android:name=".ImageConverter"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

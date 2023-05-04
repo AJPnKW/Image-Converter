@@ -1,7 +1,6 @@
 package image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai.services
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
@@ -13,7 +12,6 @@ import com.itextpdf.text.Document
 import com.itextpdf.text.Image
 import com.itextpdf.text.PageSize
 import com.itextpdf.text.Rectangle
-import image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai.FinalResult
 import java.io.File
 import java.io.IOException
 import kotlin.math.pow
@@ -204,11 +202,5 @@ class ConverterService(private val context: Context) {
         inputStream?.close()
     }
 
-    fun gotoResult(fileUri: Uri, type: String) {
-        val i = Intent(context, FinalResult::class.java)
-        i.putExtra("uri", fileUri.toString())
-        i.putExtra("type", type)
-        context.startActivity(i)
-    }
 
 }
