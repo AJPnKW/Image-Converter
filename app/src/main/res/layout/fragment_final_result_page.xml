@@ -1,14 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.FinalResultPage">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <include
+        android:id="@+id/header"
+        layout="@layout/header"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <LinearLayout
+        android:id="@+id/resultLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/_5sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header">
+
+        <ImageView
+            android:id="@+id/singleImg"
+            android:layout_width="@dimen/_200sdp"
+            android:layout_height="@dimen/_200sdp"
+            android:contentDescription="@string/converted_image"
+            android:visibility="gone" />
+
+        <ScrollView
+            android:id="@+id/finalResultScroll"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_250sdp"
+            android:padding="@dimen/_3sdp"
+            android:visibility="gone">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/finalResultRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </ScrollView>
+
+        <com.github.barteksc.pdfviewer.PDFView
+            android:id="@+id/resultPdf"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_250sdp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="#C5E1A5"
+        android:padding="3dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/resultLinearLayout">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:contentDescription="@string/saved_done"
+            android:src="@drawable/baseline_check_circle_24" />
+
+        <TextView
+            android:id="@+id/resultText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/saved_successfully"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/resultBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:gravity="center"
+        android:padding="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+        <ImageView
+            android:id="@+id/openImage"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/button_background"
+            android:clickable="true"
+            android:contentDescription="@string/image"
+            android:focusable="true"
+            android:padding="@dimen/_8sdp"
+            android:visibility="gone"
+            android:src="@drawable/baseline_image_24" />
+
+        <ImageView
+            android:id="@+id/openPdf"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/button_background"
+            android:clickable="true"
+            android:contentDescription="@string/pdf"
+            android:focusable="true"
+            android:padding="@dimen/_8sdp"
+            android:src="@drawable/baseline_picture_as_pdf_24"
+            android:visibility="gone" />
+
+
+        <ImageView
+            android:id="@+id/share"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/button_background"
+            android:clickable="true"
+            android:contentDescription="@string/share"
+            android:focusable="true"
+            android:padding="@dimen/_8sdp"
+            android:src="@drawable/baseline_share_24" />
+
+    </LinearLayout>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/firstAd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        app:adSize="LEADERBOARD"
+        app:adUnitId="ca-app-pub-3516566345027334/2738004434"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/resultBottom" />
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/secondAd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        app:adSize="LEADERBOARD"
+        app:adUnitId="ca-app-pub-3516566345027334/2447232533"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,9 @@
 package image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai.fragments
 
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -38,8 +40,14 @@ class Home : Fragment(R.layout.fragment_home) {
 
     private fun pickImages() {
         try {
+            val maxLimit = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                MediaStore.getPickImagesMaxLimit() - 1
+            } else {
+                50
+            }
+
             val pickMultipleMedia =
-                registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(50)) { uris ->
+                registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(maxLimit)) { uris ->
                     if (uris.isNotEmpty()) {
 
                         val imageUrisJson =

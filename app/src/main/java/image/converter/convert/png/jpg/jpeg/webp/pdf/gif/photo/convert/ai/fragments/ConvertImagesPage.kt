@@ -7,8 +7,9 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -61,11 +63,12 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
     private lateinit var converter: ConverterService
     private val thread = CoroutineScope(Dispatchers.IO)
 
+    private var results = mutableListOf<Uri>()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = FragmentConvertImagesPageBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -80,7 +83,6 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
             actions()
             pickNewImages()
         } catch (e: Exception) {
-            e.printStackTrace()
             Toast.makeText(requireContext(), "Unable to get images", Toast.LENGTH_SHORT).show()
         }
     }
@@ -93,6 +95,17 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
         convertImage()
     }
 
+    private fun getUris() {
+        val urisString = arguments?.getString("uris")
+        if (urisString != null) {
+            val imageUrisStrings: List<String> =
+                Gson().fromJson(urisString, object : TypeToken<List<String>>() {}.type)
+            val uris = imageUrisStrings.map { Uri.parse(it) }
+            listSize = uris.size
+            urisLiveData.value = uris
+
+        }
+    }
 
     @SuppressLint("SetTextI18n")
     private fun headerAction() {
@@ -242,11 +255,8 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
 
 
     private fun pickNewImages() {
-        val maxItem =
-            if (format == "PDF") 500 - urisLiveData.value?.size!! else 50 - urisLiveData.value?.size!!
-
         val pickMultipleMedia =
-            registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(maxItem)) { newUris ->
+            registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(50)) { newUris ->
                 if (newUris.isNotEmpty()) {
                     urisLiveData.value = (urisLiveData.value ?: emptyList()) + newUris
                 }
@@ -269,18 +279,6 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
             }
             setNegativeButton("No") { _, _ -> }
             show()
-        }
-    }
-
-    private fun getUris() {
-        val urisString = arguments?.getString("uris")
-        if (urisString != null) {
-            val imageUrisStrings: List<String> =
-                Gson().fromJson(urisString, object : TypeToken<List<String>>() {}.type)
-            val uris = imageUrisStrings.map { Uri.parse(it) }
-            listSize = uris.size
-            urisLiveData.value = uris
-
         }
     }
 
@@ -358,6 +356,7 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
     private fun convertImage() {
         binding.convertImageBtn.apply {
             setOnClickListener {
+                results = mutableListOf()
                 thread.launch {
                     when (format) {
                         "PDF" -> convertToPdf()
@@ -410,6 +409,7 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
                     Uri.fromFile(File(path))
                 }
                 newImageUri?.let {
+                    results.add(it)
                     if (index + 1 == urisLiveData.value?.size) {
                         showSuccessMsg()
                     } else {
@@ -456,6 +456,7 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
 
             val pdfUri = Uri.fromFile(File(path))
             if (pdfUri != null) {
+                results.add(pdfUri)
                 showSuccessMsg()
             }
         } catch (e: Exception) {
@@ -471,13 +472,13 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
 
     @SuppressLint("SetTextI18n")
     private fun showSuccessMsg() {
-        activity?.runOnUiThread {
+        val handler = Handler(Looper.getMainLooper())
+        handler.post {
             Toast.makeText(
                 requireContext(),
-                "Photo converted and saved to Documents/AI-Image-Converter folder ",
+                "Photo converted and saved to Documents/AI-Image-Converter folder",
                 Toast.LENGTH_LONG
-            )
-                .show()
+            ).show()
 
             binding.apply {
                 convertImageBtn.apply {
@@ -489,11 +490,31 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
                     visibility = View.GONE
                 }
             }
+
             isConverting = false
             updateUIVisibility(true, false, false)
 
+            if (results.isNotEmpty()) {
+                val resultsJson =
+                    Gson().toJson(results.map { uri -> uri.toString() })
+
+                val args = Bundle().apply {
+                    putString("results", resultsJson)
+                    putString("format", format)
+                }
+
+                handler.postDelayed({
+                    findNavController().navigate(
+                        R.id.action_convertImagesPage_to_finalResultPage,
+                        args
+                    )
+                }, 300)
+            }
+
+
         }
     }
+
 
     private fun showProgress(index: Int) {
         activity?.runOnUiThread {
