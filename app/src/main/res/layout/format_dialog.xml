@@ -25,35 +25,30 @@
                 android:id="@+id/pdfRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:text="@string/pdf" />
 
             <RadioButton
                 android:id="@+id/pngRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:text="@string/png" />
 
             <RadioButton
                 android:id="@+id/jpegRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:text="@string/jpeg_" />
 
             <RadioButton
                 android:id="@+id/jpgRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:text="@string/jpg" />
 
             <RadioButton
                 android:id="@+id/webpRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:text="@string/webp" />
 
         </RadioGroup>

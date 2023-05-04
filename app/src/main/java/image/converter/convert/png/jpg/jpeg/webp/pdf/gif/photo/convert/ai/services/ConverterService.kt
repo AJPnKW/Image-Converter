@@ -22,7 +22,6 @@ class ConverterService(private val context: Context) {
             val inputStream = context.contentResolver.openInputStream(imageUri)
             BitmapFactory.decodeStream(inputStream)
         } catch (e: IOException) {
-            e.printStackTrace()
             null
         }
     }
@@ -81,18 +80,6 @@ class ConverterService(private val context: Context) {
         }
     }
 
-    fun getImgName(imageUri: Uri?): String {
-        if (imageUri != null) {
-            val img = imageUri.toString()
-            val parts = img.split("/")
-            val fileNameWithExtension = parts.last()
-            val fileName = fileNameWithExtension.substringBeforeLast(".")
-            if (fileName != "null") {
-                return "ai-converted-$fileName"
-            }
-        }
-        return "ai-converted-image-${System.currentTimeMillis()}"
-    }
 
     fun changeQuality(n: Int): Int {
         val numDigits = n.toString().length

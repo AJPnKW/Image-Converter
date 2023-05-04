@@ -17,6 +17,7 @@
         android:id="@+id/selectImageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_40sdp"
         android:background="@drawable/select_image_border"
         android:contentDescription="@string/select_photo"
         android:maxWidth="280dp"
@@ -41,28 +42,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="20dp"
+        android:layout_marginLeft="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_50sdp"
+        android:layout_marginRight="@dimen/_20sdp"
         android:background="@drawable/button_background"
         android:text="@string/select_images_and_continue"
         android:textColor="@color/white"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/myFilesBtn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.constraintlayout.utils.widget.MotionButton
-        android:id="@+id/myFilesBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="20dp"
-        android:background="@drawable/button_background"
-        android:text="@string/my_files"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/mainAdView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectImageView" />
 
 
     <com.google.android.gms.ads.AdView
@@ -72,7 +61,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         app:adSize="LEADERBOARD"
-        app:adUnitId="ca-app-pub-3516566345027334/1302220566"
+        app:adUnitId="ca-app-pub-3516566345027334/2992610131"
         app:layout_constraintBottom_toTopOf="@+id/secondAdView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -85,7 +74,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         app:adSize="LEADERBOARD"
-        app:adUnitId="ca-app-pub-3516566345027334/2743294744"
+        app:adUnitId="ca-app-pub-3516566345027334/1595767987"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

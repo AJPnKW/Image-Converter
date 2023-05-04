@@ -5,7 +5,6 @@ import android.content.ClipData
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +12,14 @@ import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.appopen.AppOpenAd
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai.BuildConfig
@@ -32,6 +37,8 @@ class FinalResultPage : Fragment(R.layout.fragment_final_result_page) {
     private var format: String? = null
     private var resultSize: Int = 0
 
+    private var appOpenAd: AppOpenAd? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,14 +49,41 @@ class FinalResultPage : Fragment(R.layout.fragment_final_result_page) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        loadAd()
         try {
             getData()
             actions()
         } catch (e: Exception) {
-            e.printStackTrace()
             Toast.makeText(requireContext(), "Something went wrong", Toast.LENGTH_SHORT).show()
         }
 
+    }
+
+    private fun loadAd() {
+        val adRequest = AdRequest.Builder().build()
+
+        AppOpenAd.load(
+            requireContext(),
+            "ca-app-pub-3516566345027334/5127764984",
+            adRequest,
+            AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
+            object : AppOpenAd.AppOpenAdLoadCallback() {
+                override fun onAdLoaded(ad: AppOpenAd) {
+                    appOpenAd = ad
+                }
+
+                override fun onAdFailedToLoad(p0: LoadAdError) {
+                    super.onAdFailedToLoad(p0)
+                    appOpenAd = null
+                }
+            })
+
+
+        binding.apply {
+            firstAd.loadAd(adRequest)
+            secondAd.loadAd(adRequest)
+            thirdAd.loadAd(adRequest)
+        }
     }
 
     private fun getData() {
@@ -71,7 +105,18 @@ class FinalResultPage : Fragment(R.layout.fragment_final_result_page) {
         val uri = resultLiveData.value?.get(0)
 
         binding.apply {
-            header.headerText.text = "Result ($format)"
+            header.apply {
+                headerText.text = "Result ($format)"
+                headerIcon.visibility = View.GONE
+                backToHome.apply {
+                    visibility = View.VISIBLE
+                    setOnClickListener {
+                        showOpenAd()
+                    }
+                }
+            }
+
+
             openPdf.apply {
                 visibility = if (isPdf) View.VISIBLE else View.GONE
                 setOnClickListener {
@@ -264,6 +309,29 @@ class FinalResultPage : Fragment(R.layout.fragment_final_result_page) {
         }
 
 
+    }
+
+    private fun showOpenAd() {
+        if (appOpenAd != null) {
+            appOpenAd!!.show(requireActivity())
+
+            appOpenAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                override fun onAdDismissedFullScreenContent() {
+                    goToHome()
+                }
+
+                override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                    goToHome()
+                }
+            }
+
+        } else {
+            goToHome()
+        }
+    }
+
+    private fun goToHome() {
+        findNavController().navigate(R.id.action_finalResultPage_to_home2)
     }
 
     private fun showError() {

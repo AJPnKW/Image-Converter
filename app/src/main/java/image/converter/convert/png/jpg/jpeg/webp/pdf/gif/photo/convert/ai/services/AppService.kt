@@ -2,7 +2,6 @@ package image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai.servi
 
 import android.Manifest
 import android.app.Activity
-import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -11,7 +10,7 @@ object Utils {
     const val REQUEST_PERMISSION_CODE = 100
 }
 
-class AppService(private val context: Context, private val activity: Activity) {
+class AppService(private val activity: Activity) {
 
 
     private val requiredPermissions = arrayOf(

@@ -1,21 +1,31 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# Optimize and shrink code
+-optimizationpasses 5
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-dontpreverify
+-verbose
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Preserve annotations, which may be required by libraries
+-keepattributes *Annotation*
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Preserve all public classes, along with their public and protected fields and methods
+-keep public class image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai.** {
+  public protected *;
+}
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Don't obfuscate the package name
+-keep class image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai.** { *; }
+
+# Keep any classes and methods with names that are used by the Android operating system
+-keepnames class * implements android.os.Parcelable {
+  public static final android.os.Parcelable$Creator CREATOR;
+}
+
+# Remove unused code
+-assumenosideeffects class android.util.Log {
+  public static *** d(...);
+  public static *** v(...);
+}
+
+# Remove debug information
+-optimizations !debug

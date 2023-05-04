@@ -59,5 +59,20 @@
         android:contentDescription="@string/more"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
-        android:src="@drawable/baseline_more_vert_24" />
+        android:src="@drawable/baseline_more_vert_24"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/backToHome"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="end"
+        android:layout_weight="0"
+        android:clickable="true"
+        android:contentDescription="@string/more"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:src="@drawable/baseline_home_24"
+        android:visibility="gone" />
+
 </LinearLayout>

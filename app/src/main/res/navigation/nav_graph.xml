@@ -18,9 +18,6 @@
             android:name="uris"
             app:argType="string" />
 
-        <action
-            android:id="@+id/action_home2_to_myFilesPage"
-            app:destination="@id/myFilesPage" />
     </fragment>
     <fragment
         android:id="@+id/convertImagesPage"
@@ -52,18 +49,6 @@
             app:destination="@id/convertImagesPage" />
         <action
             android:id="@+id/action_finalResultPage_to_home2"
-            app:destination="@id/home2" />
-        <action
-            android:id="@+id/action_finalResultPage_to_myFilesPage"
-            app:destination="@id/myFilesPage" />
-    </fragment>
-    <fragment
-        android:id="@+id/myFilesPage"
-        android:name="image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai.fragments.MyFilesPage"
-        android:label="fragment_my_files_page"
-        tools:layout="@layout/fragment_my_files_page">
-        <action
-            android:id="@+id/action_myFilesPage_to_home2"
             app:destination="@id/home2" />
     </fragment>
 </navigation>

@@ -125,4 +125,5 @@
     <string name="_3840_x_2160_2160p_4k_ultra_hd">3840 x 2160 (2160p 4K Ultra HD)</string>
     <string name="_7680_x_4320_4320p_8k_ultra_hd">7680 x 4320 (4320p 8K Ultra HD)</string>
     <string name="converted_image">Converted Image</string>
+    <string name="saved_path_storage_documents_ai_image_converter">Saved Path:- Storage/Documents/AI-Image-Converter</string>
 </resources>

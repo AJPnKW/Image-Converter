@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +20,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.itextpdf.text.Document
@@ -65,6 +70,8 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
 
     private var results = mutableListOf<Uri>()
 
+    private var mInterstitialAd: InterstitialAd? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -76,6 +83,7 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        loadAd()
         try {
             converter = ConverterService(requireContext())
             getUris()
@@ -85,6 +93,27 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "Unable to get images", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun loadAd() {
+        val adRequest = AdRequest.Builder().build()
+
+        InterstitialAd.load(
+            requireContext(),
+            "ca-app-pub-3516566345027334/6440846651",
+            adRequest,
+            object : InterstitialAdLoadCallback() {
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    mInterstitialAd = null
+                }
+
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    mInterstitialAd = interstitialAd
+                }
+            }
+        )
+
+        binding.secondAd.loadAd(adRequest)
     }
 
 
@@ -146,8 +175,6 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
                 deleteAllImages.visibility =
                     if (!isConverting && listSize > 0) View.VISIBLE else View.GONE
                 addMoreImage.visibility = if (!isConverting) View.VISIBLE else View.GONE
-                headerText.text =
-                    if (isConverting) "Converting Images..." else navText
             }
         }
         imageAdapter.updateIsConverting(isConverting)
@@ -159,7 +186,7 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
         val popupView = LayoutInflater.from(requireContext()).inflate(R.layout.format_dialog, null)
         val popupWindow = PopupWindow(
             popupView,
-            LinearLayout.LayoutParams.MATCH_PARENT,
+            500,
             LinearLayout.LayoutParams.WRAP_CONTENT,
             true
         )
@@ -472,8 +499,7 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
 
     @SuppressLint("SetTextI18n")
     private fun showSuccessMsg() {
-        val handler = Handler(Looper.getMainLooper())
-        handler.post {
+        activity?.runOnUiThread {
             Toast.makeText(
                 requireContext(),
                 "Photo converted and saved to Documents/AI-Image-Converter folder",
@@ -493,24 +519,40 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
 
             isConverting = false
             updateUIVisibility(true, false, false)
+            if (mInterstitialAd != null) {
+                mInterstitialAd!!.show(requireActivity())
+                mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+                    override fun onAdDismissedFullScreenContent() {
+                        navigateToFinalResultPage()
+                    }
 
-            if (results.isNotEmpty()) {
-                val resultsJson =
-                    Gson().toJson(results.map { uri -> uri.toString() })
+                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                        navigateToFinalResultPage()
+                    }
 
-                val args = Bundle().apply {
-                    putString("results", resultsJson)
-                    putString("format", format)
                 }
-
-                handler.postDelayed({
-                    findNavController().navigate(
-                        R.id.action_convertImagesPage_to_finalResultPage,
-                        args
-                    )
-                }, 300)
+            } else {
+                navigateToFinalResultPage()
             }
 
+        }
+    }
+
+    private fun navigateToFinalResultPage() {
+        if (results.isNotEmpty()) {
+            val resultsJson =
+                Gson().toJson(results.map { uri -> uri.toString() })
+
+            val args = Bundle().apply {
+                putString("results", resultsJson)
+                putString("format", format)
+            }
+
+
+            findNavController().navigate(
+                R.id.action_convertImagesPage_to_finalResultPage,
+                args
+            )
 
         }
     }
@@ -518,6 +560,8 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
 
     private fun showProgress(index: Int) {
         activity?.runOnUiThread {
+            binding.header.headerText.text =
+                if (isConverting) "Converting Images...($index / $listSize)" else navText
             binding.progressBar.progress = (index + 1) * 100 / urisLiveData.value!!.size
         }
     }

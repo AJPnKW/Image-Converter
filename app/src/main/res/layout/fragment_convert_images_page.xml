@@ -194,15 +194,14 @@
         app:layout_constraintTop_toBottomOf="@+id/convertImageBtn" />
 
     <com.google.android.gms.ads.AdView
-        android:id="@+id/converterAdView"
+        android:id="@+id/secondAd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/_10sdp"
-        app:adSize="LEADERBOARD"
-        app:adUnitId="ca-app-pub-3516566345027334/3915941461"
+        app:adSize="BANNER"
+        app:adUnitId="ca-app-pub-3516566345027334/1595767987"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
