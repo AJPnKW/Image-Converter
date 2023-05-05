@@ -61,6 +61,7 @@ class FinalResultPage : Fragment(R.layout.fragment_final_result_page) {
 
     private fun loadAd() {
         val adRequest = AdRequest.Builder().build()
+        val adRequest2 = AdRequest.Builder().build()
 
         AppOpenAd.load(
             requireContext(),
@@ -81,8 +82,8 @@ class FinalResultPage : Fragment(R.layout.fragment_final_result_page) {
 
         binding.apply {
             firstAd.loadAd(adRequest)
-            secondAd.loadAd(adRequest)
-            thirdAd.loadAd(adRequest)
+            secondAd.loadAd(adRequest2)
+            thirdAd.loadAd(adRequest2)
         }
     }
 

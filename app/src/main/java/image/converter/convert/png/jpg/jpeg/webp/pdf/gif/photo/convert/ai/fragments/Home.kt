@@ -42,10 +42,12 @@ class Home : Fragment(R.layout.fragment_home) {
         backPress()
     }
 
+
     private fun loadAd() {
+        val adRequest = AdRequest.Builder().build()
         binding.apply {
-            mainAdView.loadAd(AdRequest.Builder().build())
-            secondAdView.loadAd(AdRequest.Builder().build())
+            mainAdView.loadAd(adRequest)
+            secondAdView.loadAd(adRequest)
         }
     }
 

@@ -7,6 +7,7 @@ import android.graphics.Matrix
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import androidx.exifinterface.media.ExifInterface
 import com.itextpdf.text.Document
 import com.itextpdf.text.Image
@@ -26,19 +27,27 @@ class ConverterService(private val context: Context) {
         }
     }
 
-    private fun getImageFilePath(imageUri: Uri): String {
-        val context = context.applicationContext
-        val filePath: String
-        val cursor = context.contentResolver.query(imageUri, null, null, null, null)
-        if (cursor == null) {
-            filePath = imageUri.path ?: imageUri.toString()
-        } else {
-            cursor.moveToFirst()
-            val index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
-            filePath = cursor.getString(index)
-            cursor.close()
+    private fun getImageFilePath(imageUri: Uri): String? {
+        try {
+            val filePath: String?
+            val cursor =
+                context.applicationContext.contentResolver.query(imageUri, null, null, null, null)
+            if (cursor == null) {
+                filePath = imageUri.path
+            } else {
+                cursor.moveToFirst()
+                val columnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA)
+                filePath = if (columnIndex == -1) {
+                    null
+                } else {
+                    cursor.getString(columnIndex)
+                }
+                cursor.close()
+            }
+            return filePath
+        } catch (e: Exception) {
+            return null
         }
-        return filePath
     }
 
 
@@ -57,16 +66,21 @@ class ConverterService(private val context: Context) {
     }
 
     fun rotateBitmapIfRequired(bitmap: Bitmap, imageUri: Uri): Bitmap? {
-        val exif = ExifInterface(getImageFilePath(imageUri))
+        val path = getImageFilePath(imageUri)
+        return if (path != null) {
+            val exif = ExifInterface(path)
 
-        return when (exif.getAttributeInt(
-            ExifInterface.TAG_ORIENTATION,
-            ExifInterface.ORIENTATION_NORMAL
-        )) {
-            ExifInterface.ORIENTATION_ROTATE_90 -> rotateBitmap(bitmap, 90f)
-            ExifInterface.ORIENTATION_ROTATE_180 -> rotateBitmap(bitmap, 180f)
-            ExifInterface.ORIENTATION_ROTATE_270 -> rotateBitmap(bitmap, 270f)
-            else -> bitmap
+            when (exif.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_NORMAL
+            )) {
+                ExifInterface.ORIENTATION_ROTATE_90 -> rotateBitmap(bitmap, 90f)
+                ExifInterface.ORIENTATION_ROTATE_180 -> rotateBitmap(bitmap, 180f)
+                ExifInterface.ORIENTATION_ROTATE_270 -> rotateBitmap(bitmap, 270f)
+                else -> bitmap
+            }
+        } else {
+            bitmap
         }
     }
 

@@ -126,4 +126,14 @@
     <string name="_7680_x_4320_4320p_8k_ultra_hd">7680 x 4320 (4320p 8K Ultra HD)</string>
     <string name="converted_image">Converted Image</string>
     <string name="saved_path_storage_documents_ai_image_converter">Saved Path:- Storage/Documents/AI-Image-Converter</string>
+    <string name="_16_x_16_favicon">16 x 16 (Favicon)</string>
+    <string name="_32_x_32_standard_favicon">32 x 32 (Standard Favicon)</string>
+    <string name="_48_x_48">48 x 48</string>
+    <string name="_50_x_50">50 x 50</string>
+    <string name="_100_x_100">100 x 100</string>
+    <string name="_150_x_300">150 x 300</string>
+    <string name="_120_x_120">120 x 120</string>
+    <string name="_200_x_200">200 x 200</string>
+    <string name="_300_x_240">300 x 240</string>
+    <string name="_300_x_300">300 x 300</string>
 </resources>

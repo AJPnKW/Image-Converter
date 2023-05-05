@@ -7,8 +7,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -94,6 +92,7 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
             Toast.makeText(requireContext(), "Unable to get images", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     private fun loadAd() {
         val adRequest = AdRequest.Builder().build()
@@ -187,7 +186,7 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
         val popupWindow = PopupWindow(
             popupView,
             500,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
+            500,
             true
         )
 
@@ -195,8 +194,8 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
             LayoutInflater.from(requireContext()).inflate(R.layout.image_size_dialog, null)
         val imgSizePopupWindow = PopupWindow(
             imgSizePopup,
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.MATCH_PARENT,
+            800,
+            1000,
             true
         )
 
@@ -446,11 +445,7 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
             }
         } catch (e: Exception) {
             activity?.runOnUiThread {
-                Toast.makeText(
-                    requireContext(),
-                    "Error while converting image to $format",
-                    Toast.LENGTH_LONG
-                ).show()
+                convertingError()
             }
         }
     }
@@ -487,13 +482,19 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
                 showSuccessMsg()
             }
         } catch (e: Exception) {
-            activity?.runOnUiThread {
-                Toast.makeText(
-                    requireContext(),
-                    "Error while converting image to pdf",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+            convertingError()
+        }
+    }
+
+    private fun convertingError() {
+        activity?.runOnUiThread {
+            Toast.makeText(
+                requireContext(),
+                "Error while converting image to $format",
+                Toast.LENGTH_LONG
+            ).show()
+            isConverting = false
+            updateUIVisibility(true, false, false)
         }
     }
 
