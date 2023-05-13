@@ -121,13 +121,13 @@ class FinalResultPage : Fragment(R.layout.fragment_final_result_page) {
             openPdf.apply {
                 visibility = if (isPdf) View.VISIBLE else View.GONE
                 setOnClickListener {
-                    sharePdf(uri!!, true)
+                    shareOrOpenPdf(uri!!, true)
                 }
             }
             openImage.apply {
                 visibility = if (isPdf || resultSize > 1) View.GONE else View.VISIBLE
                 setOnClickListener {
-                    shareImages(true)
+                    shareOrOpenImages(true)
                 }
             }
             resultText.text = when {
@@ -137,9 +137,9 @@ class FinalResultPage : Fragment(R.layout.fragment_final_result_page) {
             }
             share.setOnClickListener {
                 if (isPdf) {
-                    sharePdf(uri!!)
+                    shareOrOpenPdf(uri!!)
                 } else {
-                    shareImages()
+                    shareOrOpenImages()
                 }
             }
 
@@ -154,7 +154,7 @@ class FinalResultPage : Fragment(R.layout.fragment_final_result_page) {
 
     private fun openImage(position: Int) {
         val uri = resultLiveData.value?.get(position)
-        shareImages(true, uri)
+        shareOrOpenImages(true, uri)
     }
 
     private fun setUpPdf(uri: Uri) {
@@ -172,7 +172,7 @@ class FinalResultPage : Fragment(R.layout.fragment_final_result_page) {
 
     }
 
-    private fun sharePdf(uri: Uri, isView: Boolean = false) {
+    private fun shareOrOpenPdf(uri: Uri, isView: Boolean = false) {
         try {
             val context = requireContext()
             val file = uri.path?.let { File(it) }
@@ -213,11 +213,11 @@ class FinalResultPage : Fragment(R.layout.fragment_final_result_page) {
             }
 
         } catch (e: Exception) {
-            showError()
+            showError(e)
         }
     }
 
-    private fun shareImages(showImage: Boolean = false, uri: Uri? = null) {
+    private fun shareOrOpenImages(showImage: Boolean = false, uri: Uri? = null) {
         try {
             val uris = resultLiveData.value!!
             val extraMimeTypes = arrayOf("image/*", "text/plain")
@@ -264,7 +264,7 @@ class FinalResultPage : Fragment(R.layout.fragment_final_result_page) {
             startActivity(Intent.createChooser(intent, title))
 
         } catch (e: Exception) {
-            showError()
+            showError(e)
         }
     }
 
@@ -335,8 +335,9 @@ class FinalResultPage : Fragment(R.layout.fragment_final_result_page) {
         findNavController().navigate(R.id.action_finalResultPage_to_home2)
     }
 
-    private fun showError() {
+    private fun showError(e: Exception) {
         Toast.makeText(requireContext(), "Unable to share $format", Toast.LENGTH_LONG).show()
+//        binding.savedPathTxt.text = e.message
     }
 
 }

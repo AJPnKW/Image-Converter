@@ -1,15 +1,16 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/_5sdp"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:padding="@dimen/_5sdp">
 
     <RadioGroup
         android:id="@+id/popupRadioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/_26sdp">
+        android:layout_marginTop="@dimen/_26sdp"
+        android:layout_marginBottom="@dimen/_30sdp">
 
 
         <RadioButton
