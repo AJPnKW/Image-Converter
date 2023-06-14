@@ -1,6 +1,7 @@
 package image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai.fragments
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -38,6 +39,7 @@ class Home : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadAd()
+        actions()
         pickImages()
         backPress()
     }
@@ -48,6 +50,26 @@ class Home : Fragment(R.layout.fragment_home) {
         binding.apply {
             mainAdView.loadAd(adRequest)
             secondAdView.loadAd(adRequest)
+        }
+    }
+
+    private fun actions() {
+        try {
+            binding.header.headerIcon.apply {
+                visibility = View.VISIBLE
+                setOnClickListener {
+                    val intent = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(
+                            Intent.EXTRA_TEXT,
+                            "Introducing AI Image Converter, the ultimate app for converting images to various formats! Easily transform your images to PNG, JPG, JPEG, WebP, and PDF with just a few taps. Experience the power of image conversion and download AI Image Converter now: https://play.google.com/store/apps/details?id=image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai"
+                        )
+                    }
+                    startActivity(Intent.createChooser(intent, "Share App"))
+                }
+            }
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "Unable to Share", Toast.LENGTH_SHORT).show()
         }
     }
 

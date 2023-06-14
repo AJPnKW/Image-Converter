@@ -100,13 +100,15 @@ class ConverterService(private val context: Context) {
         return n / 10.0.pow((numDigits - 1).toDouble()).toInt()
     }
 
-    fun getOutputPath(imageName: String, format: String): String {
-        return "${getOutputDir().absolutePath}/${imageName}.${format}"
+    fun getOutputPath(imageName: String, format: String, isImage: Boolean = false): String {
+        return "${getOutputDir(isImage).absolutePath}/${imageName}.${format}"
     }
 
-    private fun getOutputDir(): File {
+    private fun getOutputDir(isImage: Boolean): File {
+        val rootDir =
+            if (isImage) Environment.DIRECTORY_PICTURES else Environment.DIRECTORY_DOCUMENTS
         val mediaDir = File(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
+            Environment.getExternalStoragePublicDirectory(rootDir),
             "AI-Image-Converter"
         )
         if (!mediaDir.exists()) {
@@ -115,6 +117,7 @@ class ConverterService(private val context: Context) {
         return if (mediaDir.exists())
             mediaDir else context.filesDir
     }
+
 
     private fun getPageSize(name: String): Rectangle {
         return when (name) {
@@ -174,8 +177,7 @@ class ConverterService(private val context: Context) {
         }
     }
 
-    fun convertImgToPdf(document: Document, imageUri: Uri, pdfPageSize: String, isSingle: Boolean) {
-
+    fun convertImgToPdf(document: Document, imageUri: Uri, pdfPageSize: String, index: Int) {
         val inputStream = context.contentResolver.openInputStream(imageUri)
         val imageBytes = inputStream?.readBytes()
         val image = Image.getInstance(imageBytes)
@@ -184,7 +186,6 @@ class ConverterService(private val context: Context) {
             document.pageSize = Rectangle(image.scaledWidth, image.scaledHeight)
         } else {
             document.pageSize = getPageSize(pdfPageSize)
-
         }
         val rotationAngle = image.rotation
         image.rotation = rotationAngle
@@ -195,10 +196,11 @@ class ConverterService(private val context: Context) {
         val x = (document.pageSize.width - imageWidth) / 2
         val y = (document.pageSize.height - imageHeight) / 2
         image.setAbsolutePosition(x, y)
-        document.add(image)
-        if (!isSingle) {
-            document.newPage()
+
+        if (index != 0) {
+            document.add(image)
         }
+        document.newPage()
 
         inputStream?.close()
     }

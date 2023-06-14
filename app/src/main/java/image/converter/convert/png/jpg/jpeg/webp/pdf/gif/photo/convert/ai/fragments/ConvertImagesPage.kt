@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +28,9 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.itextpdf.text.Document
+import com.itextpdf.text.pdf.PdfCopy
+import com.itextpdf.text.pdf.PdfReader
+import com.itextpdf.text.pdf.PdfSmartCopy
 import com.itextpdf.text.pdf.PdfWriter
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
@@ -157,7 +161,7 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
         binding.enterFileName.doAfterTextChanged { fileName = it.toString() }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+    @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
     private fun updateUIVisibility(
         isVisible: Boolean,
         isImgNotFound: Boolean,
@@ -168,7 +172,27 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
             enterFileName.visibility = if (isVisible) View.VISIBLE else View.GONE
             compressionLayout.visibility = if (isVisible) View.VISIBLE else View.GONE
             selectFormatLayout.visibility = if (isVisible) View.VISIBLE else View.GONE
-            convertImageBtn.visibility = if (!hideBtn) View.VISIBLE else View.GONE
+            convertImageBtn.apply {
+                visibility = if (!hideBtn) View.VISIBLE else View.GONE
+                if (isConverting) {
+                    isEnabled = false
+                    text = "Converting..."
+                } else {
+                    isEnabled = true
+                    text = "CONVERT IMAGE"
+                }
+
+            }
+            progressBar.apply {
+                if (isConverting) {
+                    max = 100
+                    visibility = View.VISIBLE
+                } else {
+                    progress = 0
+                    visibility = View.GONE
+                }
+
+            }
 
             header.apply {
                 deleteAllImages.visibility =
@@ -378,25 +402,24 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
     }
 
 
-    @SuppressLint("SetTextI18n")
     private fun convertImage() {
         binding.convertImageBtn.apply {
             setOnClickListener {
                 results = mutableListOf()
-                thread.launch {
-                    when (format) {
-                        "PDF" -> convertToPdf()
-                        else -> urisLiveData.value?.forEachIndexed { index, uri ->
+
+                if (format == "PDF") {
+                    val uriList = updateUrisForPdf() ?: urisLiveData.value!!
+                    thread.launch {
+                        convertToPdf(uriList)
+                    }
+                } else {
+                    thread.launch {
+                        urisLiveData.value?.forEachIndexed { index, uri ->
                             convertImageToFormat(uri, index)
                         }
                     }
+
                 }
-                binding.progressBar.apply {
-                    max = 100
-                    visibility = View.VISIBLE
-                }
-                isEnabled = false
-                text = "Converting..."
                 isConverting = true
                 updateUIVisibility(false, false, false)
             }
@@ -410,7 +433,7 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
                 val newImageUri: Uri?
                 val imageName = fileName?.takeIf { it.isNotBlank() }?.let { "${it}_$index" }
                     ?: "ai-converted-image-$index-${System.currentTimeMillis()}"
-                val path = converter.getOutputPath(imageName, format.lowercase())
+                val path = converter.getOutputPath(imageName, format.lowercase(), true)
                 val outputStream = FileOutputStream(path)
                 val bitmap = converter.getBitmapFromUri(imageUri)
                 val scaledBitmap = pixHeight?.let { height ->
@@ -444,16 +467,22 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
                 }
             }
         } catch (e: Exception) {
-            activity?.runOnUiThread {
-                convertingError()
-            }
+            convertingError()
         }
     }
 
 
-    private fun convertToPdf() {
+    private fun updateUrisForPdf(): MutableList<Uri>? {
+        val firstImg = urisLiveData.value!![0]
+        val urisList = urisLiveData.value?.toMutableList()
+        if (!urisList.isNullOrEmpty()) {
+            urisList.add(0, firstImg)
+        }
+        return urisList
+    }
+
+    private fun convertToPdf(imageUris: List<Uri>) {
         try {
-            val imageUris = urisLiveData.value!!
             val imgName = fileName?.takeIf { it.isNotBlank() && it.isNotEmpty() }
                 ?: "ai-converted-image-${System.currentTimeMillis()}"
 
@@ -466,9 +495,8 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
             }
             document.open()
 
-            val isSingle = imageUris.size < 2
             imageUris.forEachIndexed { index, imageUri ->
-                converter.convertImgToPdf(document, imageUri, pageSize, isSingle)
+                converter.convertImgToPdf(document, imageUri, pageSize, index)
                 showProgress(index)
             }
 
@@ -476,12 +504,14 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
             pdfWriter.close()
             outputStream.close()
 
+
             val pdfUri = Uri.fromFile(File(path))
             if (pdfUri != null) {
                 results.add(pdfUri)
                 showSuccessMsg()
             }
         } catch (e: Exception) {
+            e.printStackTrace()
             convertingError()
         }
     }
@@ -501,22 +531,12 @@ class ConvertImagesPage : Fragment(R.layout.fragment_convert_images_page) {
     @SuppressLint("SetTextI18n")
     private fun showSuccessMsg() {
         activity?.runOnUiThread {
+            val rootDis = if (format == "PDF") "Documents" else "Pictures"
             Toast.makeText(
                 requireContext(),
-                "Photo converted and saved to Documents/AI-Image-Converter folder",
+                "Photo converted and saved to $rootDis/AI-Image-Converter folder",
                 Toast.LENGTH_LONG
             ).show()
-
-            binding.apply {
-                convertImageBtn.apply {
-                    isEnabled = true
-                    text = "CONVERT IMAGE"
-                }
-                progressBar.apply {
-                    progress = 0
-                    visibility = View.GONE
-                }
-            }
 
             isConverting = false
             updateUIVisibility(true, false, false)

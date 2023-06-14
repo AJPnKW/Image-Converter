@@ -3,6 +3,7 @@ package image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.MobileAds
 import image.converter.convert.png.jpg.jpeg.webp.pdf.gif.photo.convert.ai.databinding.ActivityMainBinding
@@ -22,10 +23,8 @@ class MainActivity : AppCompatActivity() {
 
         MobileAds.initialize(this)
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            if (!appService.isAllPermissionsAllowed()) {
-                appService.requestPermissions()
-            }
+        if (!appService.isAllPermissionsAllowed()) {
+            appService.requestPermissions()
         }
 
     }

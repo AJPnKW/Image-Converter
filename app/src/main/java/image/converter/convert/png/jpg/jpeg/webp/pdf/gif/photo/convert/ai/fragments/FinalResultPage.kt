@@ -135,6 +135,12 @@ class FinalResultPage : Fragment(R.layout.fragment_final_result_page) {
                 resultSize > 1 -> "Images saved successfully"
                 else -> "Image saved successfully"
             }
+
+            savedPathTxt.text = when {
+                isPdf -> "Saved Path:- Internal storage/Documents/AI-Image-Converter"
+                else -> "Saved Path:- Internal storage/Pictures/AI-Image-Converter"
+            }
+
             share.setOnClickListener {
                 if (isPdf) {
                     shareOrOpenPdf(uri!!)
